@@ -1,0 +1,102 @@
+\documentclass{standalone}
+\usepackage{graphicx}	
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{color}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, math}
+
+\definecolor{light}{RGB}{220, 188, 188}
+\definecolor{mid}{RGB}{185, 124, 124}
+\definecolor{dark}{RGB}{143, 39, 39}
+\definecolor{highlight}{RGB}{180, 31, 180}
+\definecolor{lightteal}{RGB}{107, 142, 142}
+\definecolor{midteal}{RGB}{72, 117, 117}
+\definecolor{darkteal}{RGB}{29, 79, 79}
+\definecolor{gray10}{gray}{0.1}
+\definecolor{gray20}{gray}{0.2}
+\definecolor{gray30}{gray}{0.3}
+\definecolor{gray40}{gray}{0.4}
+\definecolor{gray60}{gray}{0.6}
+\definecolor{gray70}{gray}{0.7}
+\definecolor{gray80}{gray}{0.8}
+\definecolor{gray90}{gray}{0.9}
+\definecolor{gray95}{gray}{0.95}
+
+\tikzmath{
+  function xparabola(\y, \xv, \yv, \S) {
+    return 0.5 * ( (\xv + \S) - (\y - \yv) * (\y - \yv) / (\S - \xv) );
+  };
+  function pairint(\xa, \ya, \xb, \yb, \S) {
+    \a = \xb - \xa;
+    \b = \yb * (\S - \xa) - \ya * (\S - \xb);
+    \c = \yb * \yb * (\S - \xa) - \ya * \ya * (\S - \xb) - (\S - \xa) * (\S - \xb) * (\xb - \xa);
+    \d = sqrt( \b * \b - \a * \c);
+    \yint = (\b + \d) / \a;
+    if \yint < \ya then {
+      \yint = (\b - \d) / \a;
+    };
+    if \yint > \yb then {
+      \yint = (\b - \d) / \a;
+    };
+    return \yint;
+  };
+}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=0.75]
+
+  \draw[white] (-4.5, -3) rectangle (4.5, 3);
+
+  \pgfmathsetmacro{\xa}{-2.5}
+  \pgfmathsetmacro{\ya}{0}
+
+  \pgfmathsetmacro{\xb}{-1.5}
+  \pgfmathsetmacro{\yb}{2.5}
+  
+  \pgfmathsetmacro{\xc}{1.75}
+  \pgfmathsetmacro{\yc}{-1.25}
+  
+  \pgfmathsetmacro{\S}{2}
+  
+  \fill[dark] (\xa, \ya) circle (0.06) node[below left] { $s_{n_{1}}$ };
+  \fill[dark] (\xb, \yb) circle (0.06) node[below left] { $s_{n_{2}}$ };
+  \fill[dark] (\xc, \yc) circle (0.06) node[left] { $s_{n_{3}}$ };
+  
+  \draw[midteal, line width=1] (\S, -3) -- (\S, +3);
+  \node[midteal] at (\S + 0.25, 1) { $S$ };
+  
+  \begin{scope}
+    \clip (-4.5, -3) rectangle (4.5, 3);
+    \draw[domain={-3:3}, smooth, samples=50, line width=1, variable=\y, color=gray90] 
+      plot ( {xparabola(\y, \xa, \ya, \S)}, \y );
+      
+    \draw[domain={-3:3}, smooth, samples=50, line width=1, variable=\y, color=gray90] 
+      plot ( {xparabola(\y, \xb, \yb, \S)}, \y );
+      
+    \draw[domain={-3:3}, smooth, samples=50, line width=1, variable=\y, color=gray90] 
+      plot ( {xparabola(\y, \xc, \yc, \S)}, \y );
+  \end{scope}
+  
+  \begin{scope}
+    \pgfmathsetmacro{\yinta}{pairint(\xa, \ya, \xc, \yc, \S)}
+    \pgfmathsetmacro{\yintb}{pairint(\xc, \yc, \xa, \ya, \S)}
+    \pgfmathsetmacro{\yintc}{pairint(\xa, \ya, \xb, \yb, \S)}  
+        
+    \clip (-4.5, -3) rectangle (4.5, 3);
+    
+    \draw[line width=1, variable=\y, color=mid]
+      [domain={-3:\yinta}, smooth, samples=50] 
+        plot ( {xparabola(\y, \xa, \ya, \S)}, \y )
+      [domain={\yinta:\yintb}, smooth, samples=50] 
+        plot ( {xparabola(\y, \xc, \yc, \S)}, \y )
+      [domain={\yintb:\yintc}, smooth, samples=50] 
+        plot ( {xparabola(\y, \xa, \ya, \S)}, \y )
+      [domain={\yintc:3}, smooth, samples=50] 
+        plot ( {xparabola(\y, \xb, \yb, \S)}, \y );
+  \end{scope}
+
+\end{tikzpicture}
+
+\end{document}  

@@ -1,0 +1,175 @@
+\documentclass{standalone}
+\usepackage{graphicx}	
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{color}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, math}
+
+\definecolor{light}{RGB}{220, 188, 188}
+\definecolor{mid}{RGB}{185, 124, 124}
+\definecolor{dark}{RGB}{143, 39, 39}
+\definecolor{highlight}{RGB}{180, 31, 180}
+\definecolor{lightteal}{RGB}{107, 142, 142}
+\definecolor{midteal}{RGB}{72, 117, 117}
+\definecolor{darkteal}{RGB}{29, 79, 79}
+\definecolor{gray10}{gray}{0.1}
+\definecolor{gray20}{gray}{0.2}
+\definecolor{gray30}{gray}{0.3}
+\definecolor{gray40}{gray}{0.4}
+\definecolor{gray60}{gray}{0.6}
+\definecolor{gray70}{gray}{0.7}
+\definecolor{gray80}{gray}{0.8}
+\definecolor{gray90}{gray}{0.9}
+\definecolor{gray95}{gray}{0.95}
+
+\tikzmath{
+  function xparabola(\y, \xv, \yv, \S) {
+    return 0.5 * ( (\xv + \S) - (\y - \yv) * (\y - \yv) / (\S - \xv) );
+  };
+  function pairint(\xa, \ya, \xb, \yb, \S) {
+    \a = \xb - \xa;
+    \b = \yb * (\S - \xa) - \ya * (\S - \xb);
+    \c = \yb * \yb * (\S - \xa) - \ya * \ya * (\S - \xb) - (\S - \xa) * (\S - \xb) * (\xb - \xa);
+    \d = sqrt( \b * \b - \a * \c);
+    \yint = (\b + \d) / \a;
+    if \yint < \ya then {
+      \yint = (\b - \d) / \a;
+    };
+    if \yint > \yb then {
+      \yint = (\b - \d) / \a;
+    };
+    return \yint;
+  };
+  function circumcenterx(\xa, \ya, \xb, \yb, \xc, \yc) {
+    \D = 2 * ( \xa * (\yb - \yc) + \xb * (\yc - \ya) + \xc * (\ya - \yb) );
+    \xcnt = (  (\xa * \xa + \ya * \ya) * (\yb - \yc)
+             + (\xb * \xb + \yb * \yb) * (\yc - \ya)
+             + (\xc * \xc + \yc * \yc) * (\ya - \yb) ) / \D;
+    return \xcnt;
+  };
+  function circumcentery(\xa, \ya, \xb, \yb, \xc, \yc) {
+    \D = 2 * ( \xa * (\yb - \yc) + \xb * (\yc - \ya) + \xc * (\ya - \yb) );
+    \ycnt = (  (\xa * \xa + \ya * \ya) * (\xc - \xb)
+             + (\xb * \xb + \yb * \yb) * (\xa - \xc)
+             + (\xc * \xc + \yc * \yc) * (\xb - \xa) ) / \D;
+    return \ycnt;
+  };
+  function circumradius(\xa, \ya, \xb, \yb, \xc, \yc) {
+    \D = 2 * ( \xa * (\yb - \yc) + \xb * (\yc - \ya) + \xc * (\ya - \yb) );
+    \xcnt = (  (\xa * \xa + \ya * \ya) * (\yb - \yc)
+             + (\xb * \xb + \yb * \yb) * (\yc - \ya)
+             + (\xc * \xc + \yc * \yc) * (\ya - \yb) ) / \D;
+    \ycnt = (  (\xa * \xa + \ya * \ya) * (\xc - \xb)
+             + (\xb * \xb + \yb * \yb) * (\xa - \xc)
+             + (\xc * \xc + \yc * \yc) * (\xb - \xa) ) / \D;
+    \r = sqrt( (\xcnt - \xa) * (\xcnt - \xa) + (\ycnt - \ya) * (\ycnt - \ya) );
+    return \r;
+  };
+}
+
+\newcommand{\arrow}[5]{
+  \pgfmathsetmacro{\rx}{#3 - #1}
+  \pgfmathsetmacro{\ry}{#4 - #2}
+  \pgfmathsetmacro{\n}{sqrt( \rx * \rx + \ry * \ry )}
+  
+  \pgfmathsetmacro{\vx}{\rx / \n}
+  \pgfmathsetmacro{\vy}{\ry / \n}
+
+  \pgfmathsetmacro{\wx}{\vy}
+  \pgfmathsetmacro{\wy}{-\vx}  
+
+  \pgfmathsetmacro{\g}{0.025}
+  \pgfmathsetmacro{\gx}{-\g * \wx}
+  \pgfmathsetmacro{\gy}{-\g * \wy}  
+  
+  \draw[#5, line width=0.75] 
+       (#1 + \gx + 0.75 * \g * \vx, #2 + \gy + 0.75 * \g * \vy) 
+    -- (#3 + \gx - 0.75 * \g * \vx, #4 + \gy - 0.75 * \g * \vy); 
+    
+  \pgfmathsetmacro{\p}{30}
+  \pgfmathsetmacro{\d}{0.25}
+  \pgfmathsetmacro{\e}{0.1}
+  \pgfmathsetmacro{\lx}{#3 - (\d + \e * tan(\p)) * \vx - \e * \wx}
+  \pgfmathsetmacro{\ly}{#4 - (\d + \e * tan(\p)) * \vy - \e * \wy}  
+  \pgfmathsetmacro{\mx}{#3 - \d * \vx}
+  \pgfmathsetmacro{\my}{#4 - \d * \vy}  
+  
+  \fill[#5]    (#3 + \gx - 0.75 * \g * \vx, #4 + \gy - 0.75 * \g * \vy) 
+            -- (\lx + \gx, \ly + \gy)
+            -- (\mx + \gx, \my + \gy) 
+            -- cycle;
+}
+
+\begin{document}
+
+\begin{tikzpicture}
+  \draw[white] (-2.75, -2.5) rectangle (2.75, 2.5);
+
+  \pgfmathsetmacro{\xa}{-2}
+  \pgfmathsetmacro{\ya}{0.25}
+    
+  \pgfmathsetmacro{\xb}{-0.2}
+  \pgfmathsetmacro{\yb}{-1.5}
+
+  \pgfmathsetmacro{\xc}{-0.3}
+  \pgfmathsetmacro{\yc}{1.75}
+  
+  \pgfmathsetmacro{\cx}{circumcenterx(\xa, \ya, \xb, \yb, \xc, \yc)}
+  \pgfmathsetmacro{\cy}{circumcentery(\xa, \ya, \xb, \yb, \xc, \yc)}
+  \pgfmathsetmacro{\cr}{circumradius(\xa, \ya, \xb, \yb, \xc, \yc)}
+  
+  \pgfmathsetmacro{\S}{\cx + \cr}
+  \pgfmathsetmacro{\Vy}{pairint(\xb, \yb, \xa, \ya, \S)}
+  \pgfmathsetmacro{\Vx}{xparabola(\Vy, \xb, \yb, \S)}  
+  
+  \pgfmathsetmacro{\S}{\cx + \cr + 1}
+  \draw[midteal, line width=1] (\S, -2.5) -- (\S, +2.5);
+  \node[midteal] at (\S + 0.25, -1.75) { $S$ };
+    
+  \begin{scope}
+    \clip (-2.75, -2.5) rectangle (2.75, 2.5);
+    \pgfmathsetmacro{\yinta}{pairint(\xa, \ya, \xb, \yb, \S)}
+    \pgfmathsetmacro{\yintb}{pairint(\xb, \yb, \xc, \yc, \S)}
+    \pgfmathsetmacro{\yintc}{pairint(\xc, \yc, \xa, \ya, \S)}
+
+    \draw[domain={-5:\yintb}, smooth, samples=50, line width=1, variable=\y, color=mid] 
+      plot ( {xparabola(\y, \xb, \yb, \S)}, \y );
+     
+    \draw[domain={\yintb:5}, smooth, samples=50, line width=1, variable=\y, color=mid] 
+      plot ( {xparabola(\y, \xc, \yc, \S)}, \y );
+      
+    \pgfmathsetmacro{\xinta}{xparabola(\yinta, \xa, \ya, \S)}
+    \pgfmathsetmacro{\xintb}{xparabola(\yintb, \xb, \yb, \S)}
+    \pgfmathsetmacro{\xintc}{xparabola(\yintc, \xa, \ya, \S)}
+          
+    \arrow{\xinta}{\yinta}{\Vx}{\Vy}{lightteal}
+    \arrow{\Vx}{\Vy}{\xinta}{\yinta}{lightteal}
+           
+    \arrow{\xintb}{\yintb}{\Vx}{\Vy}{lightteal}
+    \arrow{\Vx}{\Vy}{\xintb}{\yintb}{lightteal}
+
+    \arrow{\xintc}{\yintc}{\Vx}{\Vy}{lightteal}
+    \arrow{\Vx}{\Vy}{\xintc}{\yintc}{lightteal}
+
+    \fill[darkteal] (\Vx, \Vy) circle (0.06) node[left, xshift=-2] { $v$ };
+    
+    \fill[dark] (\xintb, \yintb) circle (0.06) node[right] { $b_{n_{2}n_{1}}$ };
+  \end{scope}
+  
+  \node[midteal] at (-1.4, -1.6) { he1 };
+  \node[midteal] at (-2.3, -1.2) { he2 };
+  
+  \node[midteal] at (-2.3, 1.6) { he3 };
+  \node[midteal] at (-1.4, 2) { he4 };
+  
+  \node[midteal] at (0.1, 0.45) { he5 };
+  \node[midteal] at (0.1, -0.15) { he6 };
+  
+  \fill[dark] (\xa, \ya) circle (0.06) node[left] { $s_{n_{6}}$ };
+  \fill[dark] (\xb, \yb) circle (0.06) node[left] { $s_{n_{2}}$ };
+  \fill[dark] (\xc, \yc) circle (0.06) node[below left] { $s_{n_{1}}$ };
+
+\end{tikzpicture}
+
+\end{document}  

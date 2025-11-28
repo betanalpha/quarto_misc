@@ -1,0 +1,15 @@
+#!/bin/bash
+
+for file in `find . -name "*.pdf"`; do
+  basename=`echo $file | sed 's,^.*/\([a-z_]*\)\.pdf$,\1,'`
+
+  if [ $basename == "actual_beachline" ]; then
+    echo "Skipping $file..."
+    continue
+  fi
+
+  newfile=`echo $file | sed 's/pdf$/png/'`
+
+  echo "Converting $file..."
+  convert -density 400 -antialias $file -quality 100 $newfile
+done

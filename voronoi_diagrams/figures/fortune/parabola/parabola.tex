@@ -1,0 +1,86 @@
+\documentclass{standalone}
+\usepackage{graphicx}	
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{color}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, math}
+
+\definecolor{light}{RGB}{220, 188, 188}
+\definecolor{mid}{RGB}{185, 124, 124}
+\definecolor{dark}{RGB}{143, 39, 39}
+\definecolor{highlight}{RGB}{180, 31, 180}
+\definecolor{lightteal}{RGB}{107, 142, 142}
+\definecolor{midteal}{RGB}{72, 117, 117}
+\definecolor{darkteal}{RGB}{29, 79, 79}
+\definecolor{gray10}{gray}{0.1}
+\definecolor{gray20}{gray}{0.2}
+\definecolor{gray30}{gray}{0.3}
+\definecolor{gray40}{gray}{0.4}
+\definecolor{gray60}{gray}{0.6}
+\definecolor{gray70}{gray}{0.7}
+\definecolor{gray80}{gray}{0.8}
+\definecolor{gray90}{gray}{0.9}
+\definecolor{gray95}{gray}{0.95}
+
+\tikzmath{
+  function xparabola(\y, \xv, \yv, \S) {
+    return 0.5 * ( (\xv + \S) - (\y - \yv) * (\y - \yv) / (\S - \xv) );
+  };
+}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+  \begin{scope}[shift={(0, 0)}]
+    \draw[white] (-2.5, -2.5) rectangle (2.5, 2.5);
+
+    \pgfmathsetmacro{\xa}{-1}
+    \pgfmathsetmacro{\ya}{0}
+    
+    \pgfmathsetmacro{\S}{-0.75}
+    
+    \fill[dark] (\xa, \ya) circle (0.06) node[below left] { $p_{1}$ };
+    \draw[midteal, line width=1] (\S, -2.5) -- (\S, +2.5);
+    
+    \begin{scope}
+      \clip (-2.5, -2.5) rectangle (2.5, 2.5);
+      \draw[domain={-2.5:2.5}, smooth, samples=50, line width=1, variable=\y, color=light] 
+        plot ( {xparabola(\y, \xa, \ya, \S)}, \y );
+    \end{scope}
+  \end{scope}
+  
+  \begin{scope}[shift={(5, 0)}]
+    \draw[white] (-2.5, -2.5) rectangle (2.5, 2.5);
+
+    \pgfmathsetmacro{\xa}{-1}
+    \pgfmathsetmacro{\ya}{0}
+    
+    \pgfmathsetmacro{\S}{1}
+    
+    \fill[dark] (\xa, \ya) circle (0.06) node[below left] { $p_{1}$ };
+    \draw[midteal, line width=1] (\S, -2.5) -- (\S, +2.5);
+    
+    \draw[domain={-2.5:2.5}, smooth, samples=50, line width=1, variable=\y, color=light] 
+        plot ( {xparabola(\y, \xa, \ya, \S)}, \y );
+  \end{scope}
+  
+  \begin{scope}[shift={(10, 0)}]
+    \draw[white] (-2.5, -2.5) rectangle (2.5, 2.5);
+
+    \pgfmathsetmacro{\xa}{-1}
+    \pgfmathsetmacro{\ya}{0}
+    
+    \pgfmathsetmacro{\S}{2}
+    
+    \fill[dark] (\xa, \ya) circle (0.06) node[below left] { $p_{1}$ };
+    \draw[midteal, line width=1] (\S, -2.5) -- (\S, +2.5);
+    
+    \draw[domain={-2.5:2.5}, smooth, samples=50, line width=1, variable=\y, color=light] 
+        plot ( {xparabola(\y, \xa, \ya, \S)}, \y );
+  \end{scope}
+  
+\end{tikzpicture}
+
+\end{document}  

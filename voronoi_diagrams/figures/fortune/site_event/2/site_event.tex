@@ -1,0 +1,93 @@
+\documentclass{standalone}
+\usepackage{graphicx}	
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{color}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, math}
+
+\definecolor{light}{RGB}{220, 188, 188}
+\definecolor{mid}{RGB}{185, 124, 124}
+\definecolor{dark}{RGB}{143, 39, 39}
+\definecolor{highlight}{RGB}{180, 31, 180}
+\definecolor{lightteal}{RGB}{107, 142, 142}
+\definecolor{midteal}{RGB}{72, 117, 117}
+\definecolor{darkteal}{RGB}{29, 79, 79}
+\definecolor{gray10}{gray}{0.1}
+\definecolor{gray20}{gray}{0.2}
+\definecolor{gray30}{gray}{0.3}
+\definecolor{gray40}{gray}{0.4}
+\definecolor{gray60}{gray}{0.6}
+\definecolor{gray70}{gray}{0.7}
+\definecolor{gray80}{gray}{0.8}
+\definecolor{gray90}{gray}{0.9}
+\definecolor{gray95}{gray}{0.95}
+
+\tikzmath{
+  function xparabola(\y, \xv, \yv, \S) {
+    return 0.5 * ( (\xv + \S) - (\y - \yv) * (\y - \yv) / (\S - \xv) );
+  };
+  function pairint(\xa, \ya, \xb, \yb, \S) {
+    \a = \xb - \xa;
+    \b = \yb * (\S - \xa) - \ya * (\S - \xb);
+    \c = \yb * \yb * (\S - \xa) - \ya * \ya * (\S - \xb) - (\S - \xa) * (\S - \xb) * (\xb - \xa);
+    \d = sqrt( \b * \b - \a * \c);
+    \yint = (\b + \d) / \a;
+    if \yint < \ya then {
+      \yint = (\b - \d) / \a;
+    };
+    if \yint > \yb then {
+      \yint = (\b - \d) / \a;
+    };
+    return \yint;
+  };
+}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=0.75]
+
+  \draw[white] (-3.5, -2.5) rectangle (3.5, 2.5);
+
+  \pgfmathsetmacro{\xa}{-2}
+  \pgfmathsetmacro{\ya}{0.5}
+    
+  \pgfmathsetmacro{\xb}{1}
+  \pgfmathsetmacro{\yb}{-0.5}
+
+  \pgfmathsetmacro{\Si}{1}
+  \draw[lightteal!50!white, line width=1] (\Si, -2.5) -- (\Si, +2.5);
+      
+  \fill[dark] (\xa, \ya) circle (0.06) node[left] { $s_{n_{1}}$ };
+  
+  \begin{scope}
+    \clip (-3.5, -2.5) rectangle (3.5, 2.5);
+    \draw[domain={-2.5:2.5}, smooth, samples=50, line width=1, variable=\y, color=light!50!white] 
+      plot ( {xparabola(\y, \xa, \ya, \Si)}, \y );
+    \draw[line width=1, white] (\xb, \yb) -- ({xparabola(\yb, \xa, \ya, \Si) - 0.5}, \yb);
+  \end{scope}
+
+  \fill[dark] (\xb, \yb) circle (0.06) node[below left] { $s_{n_{2}}$ };
+
+  \pgfmathsetmacro{\Sf}{1.35}
+  \draw[midteal, line width=1] (\Sf, -2.5) -- (\Sf, +2.5);
+  \node[midteal] at (\Sf + 0.35, -1.75) { $S$ };
+  
+  \begin{scope}
+    \clip (-3.5, -2.5) rectangle (3.5, 2.5);
+    \pgfmathsetmacro{\yinta}{pairint(\xa, \ya, \xb, \yb, \Sf)}
+    \pgfmathsetmacro{\yintb}{pairint(\xb, \yb, \xa, \ya, \Sf)}
+    
+    \draw[domain={-2.5:\yinta}, smooth, samples=50, line width=1, variable=\y, color=mid] 
+      plot ( {xparabola(\y, \xa, \ya, \Sf)}, \y );
+      
+    \draw[domain={\yinta:\yintb}, smooth, samples=50, line width=1, variable=\y, color=mid] 
+      plot ( {xparabola(\y, \xb, \yb, \Sf)}, \y );  
+      
+    \draw[domain={\yintb:2.5}, smooth, samples=50, line width=1, variable=\y, color=mid] 
+      plot ( {xparabola(\y, \xa, \ya, \Sf)}, \y );
+  \end{scope}
+
+\end{tikzpicture}
+
+\end{document}  
