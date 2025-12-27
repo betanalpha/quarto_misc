@@ -1,0 +1,85 @@
+\documentclass{standalone}
+\usepackage{graphicx}	
+\usepackage{amssymb, amsmath}
+\usepackage{color}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usepackage{pgfmath}
+
+\definecolor{light}{RGB}{220, 188, 188}
+\definecolor{mid}{RGB}{185, 124, 124}
+\definecolor{dark}{RGB}{143, 39, 39}
+\definecolor{highlight}{RGB}{180, 31, 180}
+\definecolor{lightteal}{RGB}{107, 142, 142}
+\definecolor{midteal}{RGB}{72, 117, 117}
+\definecolor{darkteal}{RGB}{29, 79, 79}
+\definecolor{gray10}{gray}{0.1}
+\definecolor{gray20}{gray}{0.2}
+\definecolor{gray30}{gray}{0.3}
+\definecolor{gray40}{gray}{0.4}
+\definecolor{gray60}{gray}{0.6}
+\definecolor{gray70}{gray}{0.7}
+\definecolor{gray80}{gray}{0.8}
+\definecolor{gray90}{gray}{0.9}
+\definecolor{gray95}{gray}{0.95}
+
+\newcommand*{\offset}{0.025}
+
+\begin{document}
+
+\begin{tikzpicture}[
+   scale=0.2,
+   obscirc/.style={circle, draw=dark, fill=dark, line width=1.5, text=white,
+               inner sep=5, minimum size=27},
+   obsell/.style={ellipse, draw=dark, fill=dark, line width=1.5, text=white,
+                  inner sep=5, minimum height=27},
+   ncirc/.style={circle, draw=darkteal, fill=darkteal, line width=1.5, text=white,
+               inner sep=5, minimum size=27},
+   nell/.style={ellipse, draw=darkteal, fill=darkteal, line width=1.5, text=white,
+                  inner sep=1, minimum height=22},
+   unobscirc/.style={circle, draw=dark, fill=white, line width=1.5, text=black,
+                     inner sep=5, minimum size=27},
+   unobsell/.style={ellipse, draw=dark, fill=white, line width=1.5, text=black,
+                    inner sep=1, minimum height=22}
+  ]
+
+  % Node Spacing
+  \pgfmathsetmacro{\d}{7}
+  
+  \begin{scope}[shift={(0, 0)}]
+    \draw[white] (-7.75 * \d, -3 * \d) rectangle (7.75 * \d, 1 * \d);
+    
+    \node[midteal] at (-6.5 * \d, 0.5 * \d) { $S = 2.183$ };
+    \node[dark] at (-6.5 * \d, 0.15 * \d) { $y = -1.931$ };
+  
+    \node (N1) at (0 * \d, 0 * \d) [unobsell] { $b_{n_{1} n_{4}}, s_{n_{4}}$ };
+    %\node[dark] at (-0.75 * \d, 0.5 * \d) { $-0.517$ };
+    %\node[dark] at (+0.75 * \d, 0.5 * \d) { $-0.183$ };
+    
+    \node (N2) at (-4 * \d, -1 * \d) [nell] { $b_{n_{1} n_{3}}, s_{n_{3}}$ };
+    \node[dark] at (-4.75 * \d, -0.5 * \d) { $-2.347$ };
+    \node[dark] at (-3.25 * \d, -0.5 * \d) { $-1.837$ };
+    
+    \node (N3) at (+4 * \d, -1 * \d) [unobsell] { $b_{n_{5} n_{4}}, s_{n_{4}}$ };
+
+    \node (N4) at (-2 * \d, -2 * \d) [unobsell] { $b_{n_{3} n_{1}}, s_{n_{1}}$ };
+    \node (N5) at (-6 * \d, -2 * \d) [unobsell] { $\hspace{10mm} s_{n_{1}}$ };
+    
+    \node (N6) at (2 * \d, -2 * \d) [unobsell] { $b_{n_{4} n_{5}}, s_{n_{5}}$ };
+    \node (N7) at (6 * \d, -2 * \d) [unobsell] { $b_{n_{4} n_{1}}, s_{n_{1}}$ };
+
+    \foreach \B/\E in {N1/N2, N1/N3, N2/N4, N2/N5, N3/N6, N3/N7} {
+      \draw[->, >=stealth, color=mid, line width=1.5] (\B) -- (\E);
+    }
+
+    \foreach \B/\E in {N1/N2} {
+      \draw[->, >=stealth, lightteal, line width=3] (\B) -- (\E);
+    }
+    
+
+  \end{scope}
+
+\end{tikzpicture}
+
+\end{document}  

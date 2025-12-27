@@ -1,0 +1,161 @@
+\documentclass{standalone}
+\usepackage{graphicx}	
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{color}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, math}
+
+\definecolor{light}{RGB}{220, 188, 188}
+\definecolor{mid}{RGB}{185, 124, 124}
+\definecolor{dark}{RGB}{143, 39, 39}
+\definecolor{highlight}{RGB}{180, 31, 180}
+\definecolor{lightteal}{RGB}{107, 142, 142}
+\definecolor{midteal}{RGB}{72, 117, 117}
+\definecolor{darkteal}{RGB}{29, 79, 79}
+\definecolor{gray10}{gray}{0.1}
+\definecolor{gray20}{gray}{0.2}
+\definecolor{gray30}{gray}{0.3}
+\definecolor{gray40}{gray}{0.4}
+\definecolor{gray60}{gray}{0.6}
+\definecolor{gray70}{gray}{0.7}
+\definecolor{gray80}{gray}{0.8}
+\definecolor{gray90}{gray}{0.9}
+\definecolor{gray95}{gray}{0.95}
+
+\tikzmath{
+  function xparabola(\y, \xv, \yv, \S) {
+    return 0.5 * ( (\xv + \S) - (\y - \yv) * (\y - \yv) / (\S - \xv) );
+  };
+  function pairint(\xa, \ya, \xb, \yb, \S) {
+    \a = \xb - \xa;
+    \b = \yb * (\S - \xa) - \ya * (\S - \xb);
+    \c = \yb * \yb * (\S - \xa) - \ya * \ya * (\S - \xb) - (\S - \xa) * (\S - \xb) * (\xb - \xa);
+    \d = sqrt( \b * \b - \a * \c);
+    \yint = (\b + \d) / \a;
+    if \yint < \ya then {
+      \yint = (\b - \d) / \a;
+    };
+    if \yint > \yb then {
+      \yint = (\b - \d) / \a;
+    };
+    return \yint;
+  };
+  function circumcenterx(\xa, \ya, \xb, \yb, \xc, \yc) {
+    \D = 2 * ( \xa * (\yb - \yc) + \xb * (\yc - \ya) + \xc * (\ya - \yb) );
+    \xcnt = (  (\xa * \xa + \ya * \ya) * (\yb - \yc)
+             + (\xb * \xb + \yb * \yb) * (\yc - \ya)
+             + (\xc * \xc + \yc * \yc) * (\ya - \yb) ) / \D;
+    return \xcnt;
+  };
+  function circumcentery(\xa, \ya, \xb, \yb, \xc, \yc) {
+    \D = 2 * ( \xa * (\yb - \yc) + \xb * (\yc - \ya) + \xc * (\ya - \yb) );
+    \ycnt = (  (\xa * \xa + \ya * \ya) * (\xc - \xb)
+             + (\xb * \xb + \yb * \yb) * (\xa - \xc)
+             + (\xc * \xc + \yc * \yc) * (\xb - \xa) ) / \D;
+    return \ycnt;
+  };
+  function circumradius(\xa, \ya, \xb, \yb, \xc, \yc) {
+    \D = 2 * ( \xa * (\yb - \yc) + \xb * (\yc - \ya) + \xc * (\ya - \yb) );
+    \xcnt = (  (\xa * \xa + \ya * \ya) * (\yb - \yc)
+             + (\xb * \xb + \yb * \yb) * (\yc - \ya)
+             + (\xc * \xc + \yc * \yc) * (\ya - \yb) ) / \D;
+    \ycnt = (  (\xa * \xa + \ya * \ya) * (\xc - \xb)
+             + (\xb * \xb + \yb * \yb) * (\xa - \xc)
+             + (\xc * \xc + \yc * \yc) * (\xb - \xa) ) / \D;
+    \r = sqrt( (\xcnt - \xa) * (\xcnt - \xa) + (\ycnt - \ya) * (\ycnt - \ya) );
+    return \r;
+  };
+}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=0.75]
+
+  \draw[white] (-3.5, -2.5) rectangle (1.5, 2.5);
+
+  \pgfmathsetmacro{\xa}{-1}
+  \pgfmathsetmacro{\ya}{0.25}
+    
+  \pgfmathsetmacro{\xb}{-1.5}
+  \pgfmathsetmacro{\yb}{-1.5}
+
+  \pgfmathsetmacro{\xc}{-0.3}
+  \pgfmathsetmacro{\yc}{1.75}
+  
+  \pgfmathsetmacro{\xab}{(\xa + \xb) / 2}
+  \pgfmathsetmacro{\yab}{(\ya + \yb) / 2}
+  
+  \pgfmathsetmacro{\mab}{ ( \yb - \ya ) / ( \xb - \xa ) }
+  \pgfmathsetmacro{\mabp}{-1 / \mab}
+  
+  \pgfmathsetmacro{\xbc}{(\xb + \xc) / 2}
+  \pgfmathsetmacro{\ybc}{(\yb + \yc) / 2}
+  
+  \pgfmathsetmacro{\mbc}{ ( \yc - \yb ) / ( \xc - \xb ) }
+  \pgfmathsetmacro{\mbcp}{-1 / \mbc}
+  
+  \pgfmathsetmacro{\xac}{(\xa + \xc) / 2}
+  \pgfmathsetmacro{\yac}{(\ya + \yc) / 2}
+  
+  \pgfmathsetmacro{\mac}{ ( \yc - \ya ) / ( \xc - \xa ) }
+  \pgfmathsetmacro{\macp}{-1 / \mac}
+  
+  \pgfmathsetmacro{\cx}{circumcenterx(\xa, \ya, \xb, \yb, \xc, \yc)}
+  \pgfmathsetmacro{\cy}{circumcentery(\xa, \ya, \xb, \yb, \xc, \yc)}
+  \pgfmathsetmacro{\cr}{circumradius(\xa, \ya, \xb, \yb, \xc, \yc)}
+  
+  
+  \begin{scope}
+    \clip (-3.5, -2.5) rectangle (1.5, 2.5);
+    \draw[darkteal, line width=1] 
+      ( -4, { \mabp * (-4 - \xab ) + \yab }) -- ( \cx, { \mabp * (\cx - \xab ) + \yab });
+
+    \draw[darkteal, line width=1] 
+      ( -4, { \macp * (-4 - \xac ) + \yac }) -- ( \cx, { \macp * (\cx - \xac ) + \yac });
+
+    %\draw[darkteal, line width=1] 
+    %  ( \cx, { \mbcp * (\cx - \xbc ) + \ybc }) -- ( 4, { \mbcp * (4 - \xbc ) + \ybc });
+  \end{scope}
+
+  %\fill[darkteal] (\cx, \cy) circle (0.09);
+  
+  %\draw[lightteal] (\cx, \cy) circle (\cr);
+
+  \pgfmathsetmacro{\Sf}{\cx + \cr}
+  
+  \foreach [count=\n] \S in {0} {
+    \pgfmathsetmacro{\p}{50 + (50 / 5) * \n}
+    %\draw[midteal!\p!white, line width=1] (\S, -2.5) -- (\S, +2.5);
+      
+    \begin{scope}
+      \clip (-3.5, -2.5) rectangle (1.5, 2.5);
+      \pgfmathsetmacro{\yinta}{pairint(\xb, \yb, \xa, \ya, \S)}
+      \pgfmathsetmacro{\yintb}{pairint(\xa, \ya, \xc, \yc, \S)}
+        
+      \draw[domain={-2.5:\yinta}, smooth, samples=50, line width=1, variable=\y, color=mid!\p!white] 
+        plot ( {xparabola(\y, \xb, \yb, \S)}, \y );
+      
+      \draw[domain={\yinta:\yintb}, smooth, samples=50, line width=1, variable=\y, color=mid!\p!white] 
+        plot ( {xparabola(\y, \xa, \ya, \S)}, \y );  
+      
+      \draw[domain={\yintb:2.5}, smooth, samples=50, line width=1, variable=\y, color=mid!\p!white] 
+        plot ( {xparabola(\y, \xc, \yc, \S)}, \y );
+        
+      \pgfmathsetmacro{\xinta}{xparabola(\yinta, \xa, \ya, \S))}
+      \pgfmathsetmacro{\xintb}{xparabola(\yintb, \xa, \ya, \S)}
+       
+      \fill[dark!\p!white] (\xinta, \yinta) circle (0.06); 
+      \fill[dark!\p!white] (\xintb, \yintb) circle (0.06); 
+    \end{scope}
+  }
+
+  \fill[dark] (\xa, \ya) circle (0.06) node[left] { $s_{n_{2}}$ };
+  \fill[dark] (\xb, \yb) circle (0.06) node[left] { $s_{n_{1}}$ };
+  \fill[dark] (\xc, \yc) circle (0.06) node[left] { $s_{n_{3}}$ };
+
+  %\node[midteal] at (\Sf + 0.35, -1.75) { $S$ };
+
+\end{tikzpicture}
+
+\end{document}  

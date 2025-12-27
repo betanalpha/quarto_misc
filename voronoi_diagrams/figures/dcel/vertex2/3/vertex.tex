@@ -143,10 +143,11 @@
       \fill[custom] (\x, \y) circle (0.035);
   };
 
-  \fill[midteal] (0.904, 0.059) circle (0.035);
 
-  \arrow{2.000}{-0.050}{0.904}{0.059}{midteal}
-  \node[midteal] at (1.5, -0.15) { v.he.p };
+  \colorlet{custom}{lightteal!50!white};
+
+  \arrow{2.000}{-0.050}{0.904}{0.059}{custom}
+  \node[custom] at (1.5, -0.15) { v.he.p };
   
   \arrow{0.904}{0.059}{0.306}{-0.359}{midteal}
   \node[midteal] at (0.8, -0.2) { v.he };
@@ -163,6 +164,7 @@
   \arrow{0.904}{0.059}{2.000}{-0.050}{midteal}
   \node[midteal] at (1.5, 0.15) { v.he.p.t };
  
+  \fill[midteal] (0.904, 0.059) circle (0.035);
 
 \end{tikzpicture}
 

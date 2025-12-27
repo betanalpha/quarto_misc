@@ -54,7 +54,7 @@
   \pgfmathsetmacro{\wx}{\vy}
   \pgfmathsetmacro{\wy}{-\vx}  
 
-  \pgfmathsetmacro{\g}{0.05}
+  \pgfmathsetmacro{\g}{0.075}
   \pgfmathsetmacro{\gx}{-\g * \wx}
   \pgfmathsetmacro{\gy}{-\g * \wy}  
   
@@ -131,12 +131,12 @@
         plot ( {xparabola(\y, \xc, \yc, \S)}, \y )
       [domain={\yinta:\yintb}, smooth, samples=50] 
         plot ( {xparabola(\y, \xb, \yb, \S)}, \y )
-      [domain={\yintb:\yintc}, smooth, samples=50] 
-        plot ( {xparabola(\y, \xc, \yc, \S)}, \y )
-      [domain={\yintc:\yintd}, smooth, samples=50] 
-        plot ( {xparabola(\y, \xa, \ya, \S)}, \y )
-      [domain={\yintd:7}, smooth, samples=50] 
+      [domain={\yintb:7}, smooth, samples=50] 
         plot ( {xparabola(\y, \xc, \yc, \S)}, \y );
+      %[domain={\yintc:7}, smooth, samples=50] 
+      %  plot ( {xparabola(\y, \xa, \ya, \S)}, \y );
+      %[domain={\yintd:7}, smooth, samples=50] 
+      %  plot ( {xparabola(\y, \xc, \yc, \S)}, \y );
                
     \pgfmathsetmacro{\xinta}{xparabola(\yinta, \xc, \yc, \S)}
     \pgfmathsetmacro{\xintb}{xparabola(\yintb, \xc, \yc, \S)}
@@ -146,10 +146,10 @@
     \arrow{\xinta}{\yinta}{\xintb}{\yintb}{lightteal}
     \arrow{\xintb}{\yintb}{\xinta}{\yinta}{lightteal}
     
-    \fill[dark] (\xinta, \yinta) circle (0.1) node[above left] { $b_{n_{6} n_{2}}$ };
-    \fill[dark] (\xintb, \yintb) circle (0.1) node[below left] { $b_{n_{2} n_{6}}$ };
-    \fill[dark] (\xintc, \yintc) circle (0.1) node[above left] { $b_{n_{6} n_{1}}$ };
-    \fill[dark] (\xintd, \yintd) circle (0.1) node[below left] { $b_{n_{1} n_{6}}$ };
+    \fill[dark] (\xinta, \yinta) circle (0.1) node[left, xshift=-1.5] { $b_{n_{6} n_{2}}$ };
+    \fill[dark] (\xintb, \yintb) circle (0.1) node[left, xshift=-3] { $b_{n_{2} n_{6}}$ };
+    %\fill[dark] (\xintc, \yintc) circle (0.1) node[above left] { $b_{n_{6} n_{1}}$ };
+    %\fill[dark] (\xintd, \yintd) circle (0.1) node[below left] { $b_{n_{1} n_{6}}$ };
     
   \end{scope}
   

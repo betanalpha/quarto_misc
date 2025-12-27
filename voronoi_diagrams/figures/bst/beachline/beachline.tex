@@ -47,24 +47,25 @@
 
 \begin{tikzpicture}[scale=0.6]
 
-  \draw[white] (-8, -5) rectangle (4, 7);
+  \draw[white] (-7, -5) rectangle (4, 6.5);
 
   \pgfmathsetmacro{\xa}{1}
-  \pgfmathsetmacro{\ya}{2.75}
+  \pgfmathsetmacro{\ya}{1.5}
 
   \pgfmathsetmacro{\xb}{1.75}
   \pgfmathsetmacro{\yb}{-1.5}
   
-  \pgfmathsetmacro{\xc}{-2.75}
+  \pgfmathsetmacro{\xc}{-5}
   \pgfmathsetmacro{\yc}{0}
   
   \pgfmathsetmacro{\S}{2}
   
-  \draw[midteal, line width=1] (\S, -5) -- (\S, +7);
+  \draw[midteal, line width=1] (\S, -5) -- (\S, +6.5);
   \node[midteal] at (\S + 0.5, 1) { $S$ };
   
   \begin{scope}
-    \clip (-8, -5) rectangle (4, 7);
+    \clip (-7, -5) rectangle (4, 6.5);
+    
     \draw[domain={-5:7}, smooth, samples=50, line width=1, variable=\y, color=gray90] 
       plot ( {xparabola(\y, \xa, \ya, \S)}, \y );
       
@@ -77,11 +78,10 @@
   
   \begin{scope}
     \pgfmathsetmacro{\yinta}{pairint(\xc, \yc, \xb, \yb, \S)}
-    \pgfmathsetmacro{\yintb}{pairint(\xb, \yb, \xc, \yc, \S)}
-    \pgfmathsetmacro{\yintc}{pairint(\xc, \yc, \xa, \ya, \S)}  
-    \pgfmathsetmacro{\yintd}{pairint(\xa, \ya, \xc, \yc, \S)}  
+    \pgfmathsetmacro{\yintb}{pairint(\xb, \yb, \xa, \ya, \S)} 
+    \pgfmathsetmacro{\yintc}{pairint(\xa, \ya, \xc, \yc, \S)}  
     
-    \clip (-8, -5) rectangle (4, 7);
+    \clip (-7, -5) rectangle (4, 6.5);
     
     \draw[line width=1, variable=\y, color=mid]
       [domain={-5:\yinta}, smooth, samples=50] 
@@ -89,21 +89,17 @@
       [domain={\yinta:\yintb}, smooth, samples=50] 
         plot ( {xparabola(\y, \xb, \yb, \S)}, \y )
       [domain={\yintb:\yintc}, smooth, samples=50] 
-        plot ( {xparabola(\y, \xc, \yc, \S)}, \y )
-      [domain={\yintc:\yintd}, smooth, samples=50] 
         plot ( {xparabola(\y, \xa, \ya, \S)}, \y )
-      [domain={\yintd:7}, smooth, samples=50] 
+      [domain={\yintc:7}, smooth, samples=50] 
         plot ( {xparabola(\y, \xc, \yc, \S)}, \y );
                
     \pgfmathsetmacro{\xinta}{xparabola(\yinta, \xc, \yc, \S)}
-    \pgfmathsetmacro{\xintb}{xparabola(\yintb, \xc, \yc, \S)}
-    \pgfmathsetmacro{\xintc}{xparabola(\yintc, \xc, \yc, \S)}  
-    \pgfmathsetmacro{\xintd}{xparabola(\yintd, \xc, \yc, \S)}  
+    \pgfmathsetmacro{\xintb}{xparabola(\yintb, \xa, \ya, \S)}
+    \pgfmathsetmacro{\xintc}{xparabola(\yintc, \xc, \yc, \S)}
     
     \fill[dark] (\xinta, \yinta) circle (0.1) node[above left] { $b_{n_{6} n_{2}}$ };
-    \fill[dark] (\xintb, \yintb) circle (0.1) node[below left] { $b_{n_{2} n_{6}}$ };
-    \fill[dark] (\xintc, \yintc) circle (0.1) node[above left] { $b_{n_{6} n_{1}}$ };
-    \fill[dark] (\xintd, \yintd) circle (0.1) node[below left] { $b_{n_{1} n_{6}}$ };
+    \fill[dark] (\xintb, \yintb) circle (0.1) node[left] { $b_{n_{2} n_{1}}$ };
+    \fill[dark] (\xintc, \yintc) circle (0.1) node[below left] { $b_{n_{1} n_{6}}$ };
     
   \end{scope}
   
